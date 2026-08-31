@@ -465,6 +465,8 @@ table.info td:first-child{color:var(--smoke); font-family:"JetBrains Mono",monos
 .pack-list--do li::before{content:"\2713"; color:var(--amber);}
 .pack-list--dont li::before{content:"\2715"; color:var(--ember);}
 .form-note{color:var(--smoke); font-size:.85rem; margin:0 0 1.4rem;}
+.form-field-file{margin-bottom:1rem;}
+.form-field-file .form-note{margin:.5em 0 0;}
 .form-status{
   margin-top:1rem; font-family:"JetBrains Mono",monospace; font-size:.8rem; color:var(--amber);
   opacity:0; transition:opacity .3s ease;
@@ -917,6 +919,23 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     });
   });
+
+  /* Kontakt-formular: vis kun filvedhæftning (fx MobilePay-kvittering) når
+     emnet er noget andet end en generel forespørgsel. */
+  var kEmne = document.getElementById('k-emne');
+  var kFilWrap = document.getElementById('k-fil-wrap');
+  if(kEmne && kFilWrap){
+    var pohSyncFileField = function(){
+      var isGeneral = kEmne.value === 'Generel forespørgsel';
+      kFilWrap.hidden = isGeneral;
+      if(isGeneral){
+        var fileInput = document.getElementById('k-fil');
+        if(fileInput) fileInput.value = '';
+      }
+    };
+    kEmne.addEventListener('change', pohSyncFileField);
+    pohSyncFileField();
+  }
 
   /* ---- Praktisk Info: venue map pins (tap-to-toggle; hover works via CSS) ---- */
   var mapPins = document.querySelectorAll('.map-pin');
