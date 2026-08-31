@@ -426,6 +426,15 @@ section{padding:clamp(3.5rem,8vw,6rem) 0; position:relative;}
 .social-ph-icon{width:3rem; height:3rem; color:var(--amber); opacity:.85;}
 .social-ph-handle{font-family:"JetBrains Mono",monospace; color:var(--amber); letter-spacing:.04em; margin:0;}
 .social-ph-note{color:var(--smoke); font-size:.9rem; max-width:30ch; margin:0;}
+/* Shown by the watchdog in JS (below) if Facebook's own embed appears stuck
+   loading — sits under the iframe rather than replacing it, so the live
+   feed still shows through if/when it does load. */
+.social-embed-fallback{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.7rem;
+  text-align:center; padding:1.4rem 1.6rem; border:1px solid var(--line); margin-top:.8rem;
+}
+.social-embed-fallback[hidden]{display:none;}
+.social-embed-fallback .social-ph-note{max-width:38ch;}
 /* ---------- GENERIC CONTENT ---------- */
 .lede{font-size:1.25rem; color:var(--ash); max-width:62ch;}
 .two-col{display:grid; grid-template-columns:1.1fr .9fr; gap:3rem;}
@@ -987,6 +996,24 @@ document.addEventListener('DOMContentLoaded', function(){
     kEmne.addEventListener('change', pohSyncFileField);
     pohSyncFileField();
   }
+
+  /* ---- Facebook feed fallback ----
+     Facebook's own Page Plugin timeline (the iframe below the page header/
+     follow button) is known to hang on an infinite loading spinner for many
+     visitors — a bug on Meta's side (reproducible even navigating straight
+     to facebook.com/plugins/page.php itself), not something a site embedding
+     it can configure around. Because the iframe is cross-origin, there is no
+     reliable way to detect from here whether its content actually finished
+     loading (its box stays a fixed CSS height either way), so rather than
+     leave visitors watching a spinner with no way out, always reveal a
+     direct link to the Facebook page a few seconds after load — it costs
+     nothing when the live feed does work, and is the only way out when it
+     doesn't. The iframe itself is left in place in case it does load. */
+  document.querySelectorAll('[data-poh-fb-feed]').forEach(function(iframe){
+    var fallback = iframe.parentElement ? iframe.parentElement.querySelector('[data-poh-fb-fallback]') : null;
+    if(!fallback) return;
+    setTimeout(function(){ fallback.hidden = false; }, 6000);
+  });
 
   /* ---- Praktisk Info: venue map pins (tap-to-toggle; hover works via CSS) ---- */
   var mapPins = document.querySelectorAll('.map-pin');
