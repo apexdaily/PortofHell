@@ -104,7 +104,7 @@ p{margin:0 0 1em;max-width:65ch;color:var(--ash);}
 }
 .topnav .wrap{
   display:flex; align-items:center; justify-content:space-between;
-  height:74px;
+  height:74px; gap:2rem;
 }
 .brand{
   font-family:"Anton",sans-serif; text-transform:uppercase;
@@ -115,7 +115,15 @@ p{margin:0 0 1em;max-width:65ch;color:var(--ash);}
   width:34px; height:34px; flex:0 0 auto; display:block;
   filter:drop-shadow(0 0 6px rgba(255,74,30,.5));
 }
-.nav-right{display:flex; align-items:center; gap:1rem;}
+/* nav-right grows to fill the space between the brand and the wrap's right
+   edge; navlinks then grows again inside it and spreads its own children
+   (the plain links/dropdowns + the CTA) evenly across that width, so the
+   whole menu fills the gap between the logo and "Køb Billet" instead of
+   hugging the right edge. justify-content:flex-end here is a no-op while
+   navlinks (the only growing child) fills all the free space, but keeps
+   nav-social/navtoggle pinned right on mobile where navlinks is
+   position:fixed and no longer takes part in this flex layout. */
+.nav-right{display:flex; align-items:center; gap:1rem; flex:1 1 auto; justify-content:flex-end; min-width:0;}
 .nav-social{display:flex; align-items:center; gap:.65rem; flex:0 0 auto;}
 .nav-social a{
   color:var(--smoke); width:1.15rem; height:1.15rem; display:flex; flex:0 0 auto;
@@ -123,7 +131,7 @@ p{margin:0 0 1em;max-width:65ch;color:var(--ash);}
 }
 .nav-social a:hover{color:var(--amber); transform:translateY(-1px);}
 .nav-social svg{width:100%; height:100%;}
-.navlinks{display:flex; align-items:center; gap:.6rem; flex-wrap:nowrap;}
+.navlinks{display:flex; align-items:center; gap:1.6rem; flex-wrap:nowrap; flex:1 1 auto; justify-content:space-between; min-width:0;}
 .navlinks a{
   font-family:"JetBrains Mono",monospace; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase;
   color:var(--smoke); position:relative; padding:.3em 0; transition:color .2s ease; white-space:nowrap;
@@ -188,6 +196,7 @@ p{margin:0 0 1em;max-width:65ch;color:var(--ash);}
   .topnav .wrap{flex-wrap:nowrap;}
   .navlinks{
     position:fixed; inset:74px 0 0 0; background:var(--ink); flex-direction:column; align-items:flex-start;
+    justify-content:flex-start; flex:none;
     padding:2rem clamp(1.25rem,4vw,3rem); gap:1.4rem; transform:translateX(105%); transition:transform .3s ease;
     overflow-y:auto; overflow-x:hidden;
   }
