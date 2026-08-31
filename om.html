@@ -7,6 +7,9 @@
 <meta name="description" content="Historien om Port of Hell — en af Danmarks bedste rock festivaler, afholdt i Skovdalen, Aalborg, midt i Nordjylland.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://www.portofhell.dk/om.html">
+<link rel="alternate" hreflang="da" href="https://www.portofhell.dk/om.html">
+<link rel="alternate" hreflang="en" href="https://www.portofhell.dk/en/om.html">
+<link rel="alternate" hreflang="x-default" href="https://www.portofhell.dk/om.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Port of Hell">
 <meta property="og:locale" content="da_DK">
@@ -131,6 +134,14 @@ p{margin:0 0 1em;max-width:65ch;color:var(--ash);}
 }
 .nav-social a:hover{color:var(--amber); transform:translateY(-1px);}
 .nav-social svg{width:100%; height:100%;}
+/* Language switcher flag — a touch wider than the square social icons to
+   match a flag's 3:2 aspect ratio, with a hairline border + rounded corner
+   so it reads as a little flag chip rather than a stray colour block. */
+.nav-social a.lang-switch{
+  width:1.5rem; height:1.05rem; border-radius:2px; overflow:hidden;
+  border:1px solid rgba(239,231,220,.25);
+}
+.nav-social a.lang-switch:hover{transform:translateY(-1px); border-color:var(--amber);}
 .navlinks{display:flex; align-items:center; gap:1.6rem; flex-wrap:nowrap; flex:1 1 auto; justify-content:space-between; min-width:0;}
 .navlinks a{
   font-family:"Anton",sans-serif; font-size:.85rem; letter-spacing:.02em; text-transform:uppercase;
@@ -717,6 +728,7 @@ footer{background:var(--char); border-top:1px solid var(--line); padding:3.5rem 
       <div class="nav-social">
         <a href="https://www.facebook.com/portofhell/" target="_blank" rel="noopener" aria-label="Port of Hell på Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.5h2.5l.5-3h-3V8.5c0-.9.3-1.5 1.6-1.5H16.5V4.3C16.2 4.2 15.2 4 14 4c-2.4 0-4 1.5-4 4.2V10.5H7.5v3H10V21h3.5z"/></svg></a>
         <a href="https://www.instagram.com/portofhell.dk/" target="_blank" rel="noopener" aria-label="Port of Hell på Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg></a>
+        <a class="lang-switch" href="en/om.html" aria-label="Switch to English"><svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#00247d"/><path d="M0,0 L30,20 M30,0 L0,20" stroke="#fff" stroke-width="4"/><path d="M0,0 L12.5,8.3 M17.5,11.7 L30,20" stroke="#cf142b" stroke-width="1.6"/><path d="M30,0 L17.5,8.3 M12.5,11.7 L0,20" stroke="#cf142b" stroke-width="1.6"/><rect x="12" width="6" height="20" fill="#fff"/><rect y="7" width="30" height="6" fill="#fff"/><rect x="13" width="4" height="20" fill="#cf142b"/><rect y="8" width="30" height="4" fill="#cf142b"/></svg></a>
       </div>
       <button class="navtoggle" aria-label="Åbn menu" aria-expanded="false">MENU</button>
     </div>
@@ -948,19 +960,24 @@ document.addEventListener('DOMContentLoaded', function(){
       var url = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
       window.location.href = url;
       if(status){
-        status.textContent = 'Din mail-app åbner nu med besked udfyldt — tryk send der for at fuldføre.';
+        var isEnPage = (document.documentElement.lang || '').toLowerCase().indexOf('en') === 0;
+        status.textContent = isEnPage
+          ? 'Your mail app now opens with the message filled in — press send there to complete.'
+          : 'Din mail-app åbner nu med besked udfyldt — tryk send der for at fuldføre.';
         status.classList.add('is-visible');
       }
     });
   });
 
   /* Kontakt-formular: vis kun filvedhæftning (fx MobilePay-kvittering) når
-     emnet er noget andet end en generel forespørgsel. */
+     emnet er noget andet end en generel forespørgsel. (Checked against both
+     the Danish and English label for the same first <option>, since this
+     script is shared verbatim across both language trees.) */
   var kEmne = document.getElementById('k-emne');
   var kFilWrap = document.getElementById('k-fil-wrap');
   if(kEmne && kFilWrap){
     var pohSyncFileField = function(){
-      var isGeneral = kEmne.value === 'Generel forespørgsel';
+      var isGeneral = kEmne.value === 'Generel forespørgsel' || kEmne.value === 'General inquiry';
       kFilWrap.hidden = isGeneral;
       if(isGeneral){
         var fileInput = document.getElementById('k-fil');
