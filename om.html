@@ -518,14 +518,39 @@ table.info td:first-child{color:var(--smoke); font-family:"JetBrains Mono",monos
   position:absolute; transform:translate(-50%,-50%); z-index:2;
   width:1.7rem; height:1.7rem; border-radius:50%; border:2px solid var(--ink); padding:0;
   display:flex; align-items:center; justify-content:center; font-size:.85rem; line-height:1;
-  box-shadow:0 2px 6px rgba(0,0,0,.5); cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.5); cursor:pointer; color:var(--ink);
   transition:transform .15s ease;
 }
 .map-pin:hover, .map-pin:focus-visible, .map-pin.is-active{transform:translate(-50%,-50%) scale(1.25); z-index:3;}
-.map-pin-icon{pointer-events:none;}
-.venue-map-body [data-kind="mad"]{background:var(--amber);}
+.map-pin-icon{pointer-events:none; display:flex; align-items:center; justify-content:center;}
+.map-pin-icon svg{width:1.05em; height:1.05em;}
 .venue-map-body [data-kind="amenity"]{background:var(--ash);}
 .venue-map-body [data-kind="vej"]{background:var(--haze);}
+/* Boder ("bod"): a squared-off field instead of a dot, big enough to read
+   as a stall footprint rather than a marker. */
+.map-pin[data-kind="bod"]{
+  width:2.15rem; height:1.55rem; border-radius:3px; background:var(--amber); color:var(--ink);
+}
+/* Baren får sit eget rektangel med en fremhævet kant i venstre side —
+   tapstedet/skænken, der vender ud mod publikum — i stedet for en prik,
+   men beholder samme placering på kortet som i dag. */
+.map-pin[data-kind="bar"]{
+  width:2.5rem; height:1.55rem; border-radius:2px; background:var(--amber); color:var(--ink);
+  border-left:5px solid var(--ember); align-items:center; justify-content:flex-end; padding-right:.3em;
+}
+/* Toiletter: en lille WC-hytte-illustration i stedet for en prik. */
+.map-pin[data-kind="toilet"]{
+  width:1.7rem; height:1.7rem; border-radius:4px; background:var(--haze); color:var(--ink);
+}
+/* Indgang: festivalens eget logo som markør. Mørk baggrund, ligesom i
+   hovedmenuen, så logoets lyse streger ikke drukner i en lys prik. */
+.map-pin[data-kind="indgang"]{
+  width:2.3rem; height:2.3rem; border-radius:50%; background:var(--ink); border-color:var(--ember);
+  border-width:2.5px; padding:3px;
+}
+.map-pin-logo{width:100%; height:100%; border-radius:50%; object-fit:contain; display:block;}
+.map-pin[data-kind="handicap"]{background:var(--ash); color:var(--ink);}
+.map-pin[data-kind="merch"]{background:var(--amber); color:var(--ink);}
 .map-tip{
   position:absolute; left:50%; bottom:135%; transform:translateX(-50%) translateY(4px);
   background:var(--ink); border:1px solid var(--amber); color:var(--ash);
@@ -540,9 +565,14 @@ table.info td:first-child{color:var(--smoke); font-family:"JetBrains Mono",monos
   font-family:"JetBrains Mono",monospace; font-size:.7rem; color:var(--smoke); text-transform:uppercase; letter-spacing:.05em;}
 .map-legend span{display:inline-flex; align-items:center; gap:.5em;}
 .map-legend i{width:.8em; height:.8em; border-radius:50%; display:inline-block; border:2px solid var(--ink);}
+.map-legend i[data-kind="bod"], .map-legend i[data-kind="bar"], .map-legend i[data-kind="toilet"]{border-radius:2px;}
+.map-legend i[data-kind="indgang"]{background:var(--ink); border-color:var(--ember);}
 .map-note{color:var(--smoke); font-size:.8rem; text-align:center; margin:1rem auto 0; max-width:48ch;}
 @media (max-width:600px){
   .map-pin{width:1.4rem; height:1.4rem; font-size:.7rem;}
+  .map-pin[data-kind="bod"]{width:1.8rem; height:1.3rem;}
+  .map-pin[data-kind="bar"]{width:2.1rem; height:1.3rem;}
+  .map-pin[data-kind="indgang"]{width:1.9rem; height:1.9rem;}
   .map-tip{font-size:.6rem;}
 }
 /* ---------- FOOTER ---------- */
