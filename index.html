@@ -133,7 +133,7 @@ p{margin:0 0 1em;max-width:65ch;color:var(--ash);}
 .nav-social svg{width:100%; height:100%;}
 .navlinks{display:flex; align-items:center; gap:1.6rem; flex-wrap:nowrap; flex:1 1 auto; justify-content:space-between; min-width:0;}
 .navlinks a{
-  font-family:"JetBrains Mono",monospace; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase;
+  font-family:"Anton",sans-serif; font-size:.85rem; letter-spacing:.02em; text-transform:uppercase;
   color:var(--smoke); position:relative; padding:.3em 0; transition:color .2s ease; white-space:nowrap;
 }
 .navlinks a:hover{color:var(--ash);}
@@ -147,7 +147,7 @@ p{margin:0 0 1em;max-width:65ch;color:var(--ash);}
 .navlinks a[aria-current="page"]::after{transform:scaleX(1);}
 .nav-drop{position:relative;}
 .nav-drop-trigger{
-  font-family:"JetBrains Mono",monospace; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase;
+  font-family:"Anton",sans-serif; font-size:.85rem; letter-spacing:.02em; text-transform:uppercase;
   color:var(--smoke); background:none; border:none; cursor:pointer; padding:.3em 0; position:relative;
   display:flex; align-items:center; gap:.35em; transition:color .2s ease; white-space:nowrap;
 }
@@ -179,12 +179,12 @@ p{margin:0 0 1em;max-width:65ch;color:var(--ash);}
   opacity:1; visibility:visible; pointer-events:auto;
 }
 .nav-drop-panel a{
-  font-family:"JetBrains Mono",monospace; font-size:.72rem; letter-spacing:.04em; text-transform:uppercase;
+  font-family:"Anton",sans-serif; font-size:.82rem; letter-spacing:.02em; text-transform:uppercase;
   color:var(--smoke); padding:.6em .8em; border-radius:2px; white-space:nowrap; transition:background .15s ease, color .15s ease;
 }
 .nav-drop-panel a:hover, .nav-drop-panel a[aria-current="page"]{background:rgba(255,74,30,.12); color:var(--ash);}
 .navcta{
-  font-family:"JetBrains Mono",monospace; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase;
+  font-family:"Anton",sans-serif; font-size:.85rem; letter-spacing:.02em; text-transform:uppercase;
   background:linear-gradient(135deg,var(--ember),var(--ember-deep));
   color:#fff5ee!important; padding:.65em 1.1em; border-radius:2px; flex:0 0 auto;
   box-shadow:0 8px 24px rgba(255,74,30,.25);
@@ -582,6 +582,53 @@ footer{background:var(--char); border-top:1px solid var(--line); padding:3.5rem 
 .sticky-cta-inner{display:flex; align-items:center; justify-content:space-between; gap:1rem;}
 .sticky-cta-text{font-family:"JetBrains Mono",monospace; font-size:.78rem; letter-spacing:.05em; color:var(--ash); text-transform:uppercase;}
 @media (max-width:600px){.sticky-cta-text{display:none;} .cookie-banner-inner{flex-direction:column; align-items:flex-start;}}
+/* ---------- FLOATING CONTACT WIDGET ---------- */
+/* Fixed bottom-right on every page (see contact_fab_html in generate.py),
+   above the cookie banner and sticky ticket bar in stacking order so it is
+   always reachable; JS nudges its `bottom` up when one of those bars is
+   currently showing so it never sits underneath them (pohPositionContactFab). */
+.contact-fab{
+  position:fixed; right:1.25rem; bottom:1.25rem; z-index:80;
+  display:flex; flex-direction:column; align-items:flex-end; gap:.7rem;
+  transition:bottom .25s ease;
+}
+.contact-fab-toggle{
+  width:56px; height:56px; flex:0 0 auto; border-radius:50%; border:none; cursor:pointer;
+  background:linear-gradient(135deg,var(--ember),var(--ember-deep)); color:#fff5ee;
+  display:flex; align-items:center; justify-content:center; position:relative;
+  box-shadow:0 10px 28px rgba(255,74,30,.4); transition:transform .2s ease, box-shadow .2s ease;
+}
+.contact-fab-toggle:hover{transform:translateY(-2px); box-shadow:0 14px 34px rgba(255,74,30,.5);}
+.contact-fab-icon{
+  width:1.4rem; height:1.4rem; position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(1) rotate(0deg);
+  opacity:1; transition:opacity .2s ease, transform .2s ease;
+}
+.contact-fab-icon-close{opacity:0; transform:translate(-50%,-50%) scale(.5) rotate(-45deg);}
+.contact-fab.is-open .contact-fab-icon-open{opacity:0; transform:translate(-50%,-50%) scale(.5) rotate(45deg);}
+.contact-fab.is-open .contact-fab-icon-close{opacity:1; transform:translate(-50%,-50%) scale(1) rotate(0deg);}
+.contact-fab-panel{
+  display:flex; flex-direction:column; align-items:flex-end; gap:.6rem;
+  opacity:0; visibility:hidden; transform:translateY(10px);
+  transition:opacity .2s ease, transform .2s ease, visibility .2s;
+  pointer-events:none;
+}
+.contact-fab.is-open .contact-fab-panel{opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto;}
+.contact-fab-item{
+  display:flex; align-items:center; gap:.6rem;
+  background:rgba(18,15,13,.96); border:1px solid var(--line); color:var(--ash);
+  padding:.6em 1em .6em .7em; border-radius:999px; white-space:nowrap;
+  font-family:"JetBrains Mono",monospace; font-size:.78rem; letter-spacing:.04em; text-transform:uppercase;
+  box-shadow:0 12px 30px rgba(0,0,0,.45); transition:background .15s ease, transform .15s ease, border-color .15s ease;
+}
+.contact-fab-item:hover{background:rgba(255,74,30,.16); border-color:rgba(255,74,30,.4); transform:translateX(-3px);}
+.contact-fab-item svg{width:1.2rem; height:1.2rem; flex:0 0 auto; color:var(--amber);}
+@media (max-width:600px){
+  .contact-fab{right:1rem; bottom:1rem;}
+  .contact-fab-toggle{width:50px; height:50px;}
+  .contact-fab-item span{display:none;}
+  .contact-fab-item{padding:.6em; border-radius:50%;}
+}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Port of Hell", "url": "https://www.portofhell.dk", "description": "Port of Hell er en rock- og metalfestival i Aalborg, Nordjylland.", "sameAs": ["https://www.facebook.com/portofhell/", "https://www.instagram.com/portofhell.dk/"], "email": "portofhell@portofhell.dk"}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "MusicEvent", "name": "Port of Hell 2026", "description": "Rock- og metalfestival i Aalborg, Nordjylland — to dage med hård rock og metal i Skovdalen.", "startDate": "2026-09-04T15:00:00+02:00", "endDate": "2026-09-06T02:00:00+02:00", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode", "eventStatus": "https://schema.org/EventScheduled", "location": {"@type": "Place", "name": "Skovdalen, Aalborg", "address": {"@type": "PostalAddress", "addressLocality": "Aalborg", "addressRegion": "Nordjylland", "addressCountry": "DK"}}, "offers": {"@type": "Offer", "url": "https://billetto.dk/e/port-of-hell-2026-billetter-1762782", "price": "480", "priceCurrency": "DKK", "availability": "https://schema.org/InStock", "validFrom": "2026-01-01T00:00:00+01:00"}, "performer": [{"@type": "MusicGroup", "name": "Deadlocked"}, {"@type": "MusicGroup", "name": "Speed Slut"}, {"@type": "MusicGroup", "name": "Endarken"}, {"@type": "MusicGroup", "name": "Defecto"}, {"@type": "MusicGroup", "name": "Vorga"}, {"@type": "MusicGroup", "name": "Mnemic"}, {"@type": "MusicGroup", "name": "Northophere"}, {"@type": "MusicGroup", "name": "Fatal Image"}, {"@type": "MusicGroup", "name": "Ashes of Billy"}, {"@type": "MusicGroup", "name": "Crown The Beast"}, {"@type": "MusicGroup", "name": "Hatesphere"}, {"@type": "MusicGroup", "name": "Clawfinger"}], "organizer": {"@type": "Organization", "name": "ARM & Marienhaab Koncert- og Kulturforening", "url": "https://www.portofhell.dk"}}</script>
@@ -817,6 +864,18 @@ footer{background:var(--char); border-top:1px solid var(--line); padding:3.5rem 
     <a class="btn btn-primary btn-sm" href="https://billetto.dk/e/port-of-hell-2026-billetter-1762782" target="_blank" rel="noopener">Køb Billet &rarr;</a>
   </div>
 </div>
+
+<div class="contact-fab" id="contact-fab">
+  <div class="contact-fab-panel" id="contact-fab-panel">
+      <a class="contact-fab-item" href="mailto:portofhell@portofhell.dk" aria-label="Mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mail</span></a>
+      <a class="contact-fab-item" href="https://www.facebook.com/portofhell/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.5h2.5l.5-3h-3V8.5c0-.9.3-1.5 1.6-1.5H16.5V4.3C16.2 4.2 15.2 4 14 4c-2.4 0-4 1.5-4 4.2V10.5H7.5v3H10V21h3.5z"/></svg><span>Facebook</span></a>
+      <a class="contact-fab-item" href="https://www.instagram.com/portofhell.dk/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg><span>Instagram</span></a>
+  </div>
+  <button type="button" class="contact-fab-toggle" id="contact-fab-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="contact-fab-panel" aria-label="Åbn kontaktmuligheder">
+    <svg class="contact-fab-icon contact-fab-icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg class="contact-fab-icon contact-fab-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+  </button>
+</div>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   var toggle = document.querySelector('.navtoggle');
@@ -1045,21 +1104,41 @@ document.addEventListener('DOMContentLoaded', function(){
   /* ---- Cookie consent banner ---- */
   var cookieBanner = document.getElementById('cookie-banner');
   var stickyCta = document.getElementById('sticky-cta');
+  var contactFab = document.getElementById('contact-fab');
   function pohCookieChoice(){
     try{ return localStorage.getItem('poh-cookie-choice'); }catch(e){ return null; }
   }
   function pohSetCookieChoice(v){
     try{ localStorage.setItem('poh-cookie-choice', v); }catch(e){}
   }
+  /* Keeps the floating contact button clear of whichever fixed bottom bar
+     (cookie banner takes priority, then the ticket sticky-cta) is
+     currently on screen, so it's never covered or half-hidden. */
+  function pohPositionContactFab(){
+    if(!contactFab) return;
+    var lift = 0;
+    if(cookieBanner && cookieBanner.classList.contains('is-visible')){
+      lift = cookieBanner.offsetHeight;
+    } else if(stickyCta && stickyCta.classList.contains('is-visible')){
+      lift = stickyCta.offsetHeight;
+    }
+    contactFab.style.bottom = lift > 0 ? (lift + 20) + 'px' : '';
+  }
   function pohMaybeShowStickyCta(){
-    if(!stickyCta) return;
-    if(cookieBanner && cookieBanner.classList.contains('is-visible')){ stickyCta.classList.remove('is-visible'); return; }
-    if(window.scrollY > window.innerHeight * .6){ stickyCta.classList.add('is-visible'); }
-    else { stickyCta.classList.remove('is-visible'); }
+    if(stickyCta){
+      if(cookieBanner && cookieBanner.classList.contains('is-visible')){
+        stickyCta.classList.remove('is-visible');
+      } else if(window.scrollY > window.innerHeight * .6){
+        stickyCta.classList.add('is-visible');
+      } else {
+        stickyCta.classList.remove('is-visible');
+      }
+    }
+    pohPositionContactFab();
   }
   if(cookieBanner){
     if(!pohCookieChoice()){
-      setTimeout(function(){ cookieBanner.classList.add('is-visible'); }, 600);
+      setTimeout(function(){ cookieBanner.classList.add('is-visible'); pohPositionContactFab(); }, 600);
     }
     var acceptBtn = document.getElementById('cookie-accept');
     var declineBtn = document.getElementById('cookie-decline');
@@ -1072,9 +1151,31 @@ document.addEventListener('DOMContentLoaded', function(){
       });
     });
   }
-  if(stickyCta){
+  if(stickyCta || contactFab){
     window.addEventListener('scroll', pohMaybeShowStickyCta, {passive: true});
     pohMaybeShowStickyCta();
+  }
+
+  /* ---- Floating contact widget ---- */
+  var contactFabToggle = document.getElementById('contact-fab-toggle');
+  if(contactFab && contactFabToggle){
+    contactFabToggle.addEventListener('click', function(){
+      var open = contactFab.classList.toggle('is-open');
+      contactFabToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function(e){
+      if(contactFab.classList.contains('is-open') && !contactFab.contains(e.target)){
+        contactFab.classList.remove('is-open');
+        contactFabToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && contactFab.classList.contains('is-open')){
+        contactFab.classList.remove('is-open');
+        contactFabToggle.setAttribute('aria-expanded', 'false');
+        contactFabToggle.focus();
+      }
+    });
   }
 });
 </script>
