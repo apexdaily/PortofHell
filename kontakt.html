@@ -549,6 +549,13 @@ table.info td:first-child{color:var(--smoke); font-family:"JetBrains Mono",monos
   border-width:2.5px; padding:3px;
 }
 .map-pin-logo{width:100%; height:100%; border-radius:50%; object-fit:contain; display:block;}
+/* Boder med et rigtigt, indsendt bod-logo: hvid baggrund (logoerne har hver
+   deres egen farve/baggrund) og lidt større felt, så hele logoet kan være
+   med uden at blive beskåret eller strakt. */
+.map-pin.has-logo[data-kind="bod"]{
+  width:2.6rem; height:2rem; background:#fff; border-color:var(--amber); border-width:2px; padding:2px;
+}
+.map-pin-logo--stall{border-radius:2px; object-fit:contain;}
 .map-pin[data-kind="handicap"]{background:var(--ash); color:var(--ink);}
 .map-pin[data-kind="merch"]{background:var(--amber); color:var(--ink);}
 .map-tip{
@@ -571,6 +578,7 @@ table.info td:first-child{color:var(--smoke); font-family:"JetBrains Mono",monos
 @media (max-width:600px){
   .map-pin{width:1.4rem; height:1.4rem; font-size:.7rem;}
   .map-pin[data-kind="bod"]{width:1.8rem; height:1.3rem;}
+  .map-pin.has-logo[data-kind="bod"]{width:2.1rem; height:1.6rem;}
   .map-pin[data-kind="bar"]{width:2.1rem; height:1.3rem;}
   .map-pin[data-kind="indgang"]{width:1.9rem; height:1.9rem;}
   .map-tip{font-size:.6rem;}
