@@ -586,9 +586,15 @@ footer{background:var(--char); border-top:1px solid var(--line); padding:3.5rem 
 /* Fixed bottom-right on every page (see contact_fab_html in generate.py),
    above the cookie banner and sticky ticket bar in stacking order so it is
    always reachable; JS nudges its `bottom` up when one of those bars is
-   currently showing so it never sits underneath them (pohPositionContactFab). */
+   currently showing so it never sits underneath them (pohPositionContactFab).
+   The base bottom offset already clears Netlify's own "Powered by Netlify"
+   badge, which the free plan injects fixed at bottom:0/right:0 with a
+   z-index so high (2147483645) that nothing can be stacked above it —
+   the fix is to not overlap its footprint (~64px tall) in the first place,
+   not to out-z-index it. NETLIFY_BADGE_CLEARANCE in the JS below mirrors
+   this value for when a bottom bar is showing. */
 .contact-fab{
-  position:fixed; right:1.25rem; bottom:1.25rem; z-index:80;
+  position:fixed; right:1.25rem; bottom:84px; z-index:80;
   display:flex; flex-direction:column; align-items:flex-end; gap:.7rem;
   transition:bottom .25s ease;
 }
@@ -624,7 +630,7 @@ footer{background:var(--char); border-top:1px solid var(--line); padding:3.5rem 
 .contact-fab-item:hover{background:rgba(255,74,30,.16); border-color:rgba(255,74,30,.4); transform:translateX(-3px);}
 .contact-fab-item svg{width:1.2rem; height:1.2rem; flex:0 0 auto; color:var(--amber);}
 @media (max-width:600px){
-  .contact-fab{right:1rem; bottom:1rem;}
+  .contact-fab{right:1rem; bottom:84px;}
   .contact-fab-toggle{width:50px; height:50px;}
   .contact-fab-item span{display:none;}
   .contact-fab-item{padding:.6em; border-radius:50%;}
@@ -1088,16 +1094,21 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   /* Keeps the floating contact button clear of whichever fixed bottom bar
      (cookie banner takes priority, then the ticket sticky-cta) is
-     currently on screen, so it's never covered or half-hidden. */
+     currently on screen, so it's never covered or half-hidden — and never
+     shorter than NETLIFY_BADGE_CLEARANCE, matching the base CSS offset
+     that keeps it off Netlify's own bottom-right "Powered by Netlify"
+     badge (see the .contact-fab comment in styles.py for why that badge
+     can't just be out-z-index'd). */
+  var NETLIFY_BADGE_CLEARANCE = 84;
   function pohPositionContactFab(){
     if(!contactFab) return;
     var lift = 0;
     if(cookieBanner && cookieBanner.classList.contains('is-visible')){
-      lift = cookieBanner.offsetHeight;
+      lift = cookieBanner.offsetHeight + 20;
     } else if(stickyCta && stickyCta.classList.contains('is-visible')){
-      lift = stickyCta.offsetHeight;
+      lift = stickyCta.offsetHeight + 20;
     }
-    contactFab.style.bottom = lift > 0 ? (lift + 20) + 'px' : '';
+    contactFab.style.bottom = Math.max(lift, NETLIFY_BADGE_CLEARANCE) + 'px';
   }
   function pohMaybeShowStickyCta(){
     if(stickyCta){
